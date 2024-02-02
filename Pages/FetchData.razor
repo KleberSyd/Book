@@ -1,13 +1,10 @@
 ﻿@page "/fetchdata"
 
-<PageTitle>Weather forecast</PageTitle>
-
 @using Book.Data
 @inject BookServices BookServices
 
 <h3 class="mb-3">Search Results:</h3>
 <div class="table-responsive">
-
     <table class="table table-hover">
         <thead class="thead-dark">
         <tr>
@@ -21,16 +18,25 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var book in _books)
+        @if (_books != null)
+        {
+            foreach (var book in _books)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Publisher</td>
+                    <td>@book.Authors</td>
+                    <td>@book.Type</td>
+                    <td>@book.ISBN</td>
+                    <td>@book.Category</td>
+                    <td>@book.AvailableCopies</td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@book.Title</td>
-                <td>@book.Publisher</td>
-                <td>@book.Authors</td>
-                <td>@book.Type</td>
-                <td>@book.ISBN</td>
-                <td>@book.Category</td>
-                <td>@book.AvailableCopies</td>
+                <td colspan="7">No books found.</td>
             </tr>
         }
         </tbody>
@@ -44,10 +50,13 @@
     [Parameter]
     public string? SearchValue { get; set; }
 
-    private List<Book> _books = new List<Book>();
+    private List<Book>? _books;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        _books = await BookServices.GetBooksAsync(DateTime.Now);
+        if (!string.IsNullOrEmpty(SearchValue) && !string.IsNullOrEmpty(SearchBy))
+        {
+            _books = await BookServices.SearchBooksAsync(SearchBy, SearchValue);
+        }
     }
 }
