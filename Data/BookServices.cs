@@ -12,18 +12,19 @@ public class BookServices
             isbn: "8976", category: "Fiction", availableCopies: "2/6"),
     };
 
-    public Task<List<Book>> SearchBooksAsync(string searchBy, string searchValue)
+    public Task<List<Book>> SearchBooksAsync(string searchValue)
     {
         var query = _allBooks.AsQueryable();
 
-        if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchValue)) return Task.FromResult(query.ToList());
-        query = searchBy.ToLower() switch
+        if (!string.IsNullOrEmpty(searchValue))
         {
-            "title" => query.Where(b => b.Title.Contains(searchValue, StringComparison.OrdinalIgnoreCase)),
-            "author" => query.Where(b => b.Authors.Contains(searchValue, StringComparison.OrdinalIgnoreCase)),
-            "publisher" => query.Where(b => b.Publisher.Contains(searchValue, StringComparison.OrdinalIgnoreCase)),
-            _ => query
-        };
+            query = query.Where(b =>
+                b.Title.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                b.Authors.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                b.Publisher.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                b.ISBN.Contains(searchValue) ||
+                b.Category.Contains(searchValue, StringComparison.OrdinalIgnoreCase));
+        }
 
         return Task.FromResult(query.ToList());
     }

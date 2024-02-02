@@ -5,34 +5,16 @@
 <h1 class="mb-4">Royal Library</h1>
 
 <div class="mb-3">
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="searchByDropdown">Search By</label>
-        </div>
-        <select class="custom-select" id="searchByDropdown" @bind="_searchBy" @bind:event="oninput">
-            <option value="latest">Latest</option>
-            <option value="title">Title</option>
-            <option value="author">Author</option>
-            <option value="publisher">Publisher</option>
-        </select>
-    </div>
-    
     <div class="input-group mt-3">
-        <input type="text" class="form-control" placeholder="Search Value" @bind="_searchValue" @oninput="SearchBooks">
+        <input type="text" class="form-control" placeholder="Search Books" @bind="_searchValue" @bind:event="oninput" />
     </div>
 </div>
 
-@if (!string.IsNullOrEmpty(_searchValue) || !string.IsNullOrEmpty(_searchBy))
+@if (!string.IsNullOrEmpty(_searchValue))
 {
-    <FetchData SearchValue="@_searchValue" SearchBy="@_searchBy"></FetchData>
+    <FetchData SearchValue="@_searchValue"></FetchData>
 }
 
 @code {
     private string? _searchValue;
-    private string? _searchBy;
-
-    private void SearchBooks(ChangeEventArgs e)
-    {
-        if (e.Value != null) _searchValue = e.Value.ToString() ?? string.Empty;
-    }
 }

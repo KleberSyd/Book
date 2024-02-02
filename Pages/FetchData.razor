@@ -45,18 +45,15 @@
 
 @code {
     [Parameter]
-    public string? SearchBy { get; set; }
-
-    [Parameter]
     public string? SearchValue { get; set; }
 
     private List<Book>? _books;
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!string.IsNullOrEmpty(SearchValue) && !string.IsNullOrEmpty(SearchBy))
+        if (!string.IsNullOrEmpty(SearchValue))
         {
-            _books = await BookServices.SearchBooksAsync(SearchBy, SearchValue);
+            _books = await BookServices.SearchBooksAsync(SearchValue);
         }
     }
 }
