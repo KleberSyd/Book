@@ -1,9 +1,38 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Royal Library</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 class="mb-4">Royal Library</h1>
 
-Welcome to your new app.
+<div class="mb-3">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="searchByDropdown">Search By</label>
+        </div>
+        <select class="custom-select" id="searchByDropdown" @bind="_searchBy" @bind:event="oninput">
+            <option value="latest">Latest</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="publisher">Publisher</option>
+        </select>
+    </div>
+    
+    <div class="input-group mt-3">
+        <input type="text" class="form-control" placeholder="Search Value" @bind="_searchValue" @oninput="SearchBooks">
+    </div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@if (!string.IsNullOrEmpty(_searchValue) || !string.IsNullOrEmpty(_searchBy))
+{
+    <FetchData SearchValue="@_searchValue" SearchBy="@_searchBy"></FetchData>
+}
+
+@code {
+    private string? _searchValue;
+    private string? _searchBy;
+
+    private void SearchBooks(ChangeEventArgs e)
+    {
+        if (e.Value != null) _searchValue = e.Value.ToString() ?? string.Empty;
+    }
+}
