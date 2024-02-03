@@ -8,6 +8,22 @@ public class LibraryContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=LibraryDb;Trusted_Connection=True;");
+        if (optionsBuilder.IsConfigured)
+        {
+            return;
+        }
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var connectionString = configuration.GetConnectionString("LibraryDatabase");
+        optionsBuilder.UseSqlServer(connectionString);
+    }
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Book>().HasKey(b => b.ISBN);
     }
 }

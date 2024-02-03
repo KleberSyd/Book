@@ -1,6 +1,10 @@
 ﻿namespace Book.Data;
 public class Book
 {
+    protected Book()
+    {
+        
+    }
     public Book(string title, string publisher, string authors, string type, string isbn, string category, string availableCopies)
     {
         Title = title;
