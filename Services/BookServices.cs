@@ -1,31 +1,27 @@
-﻿namespace Book.Services;
+﻿using Book.Data;
+using Book.Extension;
+using Microsoft.EntityFrameworkCore;
 
-public class BookServices
+namespace Book.Services;
+
+public class BookServices(LibraryContext context)
 {
-    private readonly List<Models.Book> _allBooks = new()
+    public async Task<List<Models.Book>> SearchBooksAsync(string searchValue)
     {
-        new Models.Book(title: "The Power of Moments", publisher: "New York Times", authors: "Dan Heath, Chip Heath",
-            type: "Hardcover", isbn: "123456", category: "Fiction", availableCopies: "2/5"),
-        new Models.Book(title: "A Million Little Pieces", publisher: "Simon & Schuster Inc", authors: "James Frey",
-            type: "PaperBack", isbn: "23456", category: "Fiction", availableCopies: "3/5"),
-        new Models.Book(title: "The Dreamer", publisher: "Scholastic Inc.", authors: "Pam Muñoz Ryan", type: "Paperback",
-            isbn: "8976", category: "Fiction", availableCopies: "2/6"),
-    };
+        var query = from b in context.Books
+            select new Models.Book(b.Title, b.Publisher.Name, b.Authors.ToString(), b.Type, b.Isbn, b.Category, b.AvailableCopies() );
 
-    public Task<List<Models.Book>> SearchBooksAsync(string searchValue)
-    {
-        var query = _allBooks.AsQueryable();
 
         if (!string.IsNullOrEmpty(searchValue))
         {
             query = query.Where(b =>
-                b.Title.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                b.Authors.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                b.Publisher.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                b.Title.Contains(searchValue) ||
+                b.Authors.Contains(searchValue) ||
+                b.Publisher.Contains(searchValue) ||
                 b.ISBN.Contains(searchValue) ||
-                b.Category.Contains(searchValue, StringComparison.OrdinalIgnoreCase));
+                b.Category.Contains(searchValue));
         }
 
-        return Task.FromResult(query.ToList());
+        return await query.ToListAsync();
     }
 }

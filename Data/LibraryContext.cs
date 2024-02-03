@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 public class LibraryContext : DbContext
 {
+    public DbSet<Entities.Author> Authors { get; set; } = null!;
     public DbSet<Entities.Book> Books { get; set; } = null!;
+    public DbSet<Entities.Publisher> Publishers { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -24,6 +26,8 @@ public class LibraryContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Entities.Book>().HasKey(b => b.Isbn);
+        modelBuilder.Entity<Entities.Author>().HasKey(b => b.AuthorId);
+        modelBuilder.Entity<Entities.Book>().HasKey(b => b.BookId);
+        modelBuilder.Entity<Entities.Publisher>().HasKey(b => b.PublisherId);
     }
 }

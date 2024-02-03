@@ -24,4 +24,6 @@ public class Book
     public string Type { get; set; }
     public string Isbn { get; set; }
     public string Category { get; set; }
+    public virtual Publisher Publisher { get; set; }
+    public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
 }
