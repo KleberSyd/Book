@@ -1,18 +1,18 @@
-﻿namespace Book.Data;
+﻿namespace Book.Services;
 
 public class BookServices
 {
-    private readonly List<Book> _allBooks = new()
+    private readonly List<Models.Book> _allBooks = new()
     {
-        new Book(title: "The Power of Moments", publisher: "New York Times", authors: "Dan Heath, Chip Heath",
+        new Models.Book(title: "The Power of Moments", publisher: "New York Times", authors: "Dan Heath, Chip Heath",
             type: "Hardcover", isbn: "123456", category: "Fiction", availableCopies: "2/5"),
-        new Book(title: "A Million Little Pieces", publisher: "Simon & Schuster Inc", authors: "James Frey",
+        new Models.Book(title: "A Million Little Pieces", publisher: "Simon & Schuster Inc", authors: "James Frey",
             type: "PaperBack", isbn: "23456", category: "Fiction", availableCopies: "3/5"),
-        new Book(title: "The Dreamer", publisher: "Scholastic Inc.", authors: "Pam Muñoz Ryan", type: "Paperback",
+        new Models.Book(title: "The Dreamer", publisher: "Scholastic Inc.", authors: "Pam Muñoz Ryan", type: "Paperback",
             isbn: "8976", category: "Fiction", availableCopies: "2/6"),
     };
 
-    public Task<List<Book>> SearchBooksAsync(string searchValue)
+    public Task<List<Models.Book>> SearchBooksAsync(string searchValue)
     {
         var query = _allBooks.AsQueryable();
 
